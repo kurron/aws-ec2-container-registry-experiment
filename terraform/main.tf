@@ -28,6 +28,17 @@ resource "aws_iam_policy_attachment" "docker-registry-writer-policy-attachment" 
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
 
+resource "aws_iam_group" "docker-registry-reader" {
+    name = "docker-registry-reader"
+    path = "/"
+}
+
+resource "aws_iam_policy_attachment" "docker-registry-reader-policy-attachment" {
+    name = "docker-registry-reader-policy-attachment"
+    groups = ["${aws_iam_group.docker-registry-reader.id}"]
+    policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
 # ------------ outputs ----------------------
 
 output "bob" {
