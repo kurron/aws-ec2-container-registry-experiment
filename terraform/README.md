@@ -1,6 +1,6 @@
 #Overview
 This project creates, but does not provision, an [AWS](http://aws.amazon.com/) environment suitable for running an 
-ECS fleet.
+EC2 Registry.
 
 #Prerequisites
 
@@ -9,7 +9,8 @@ ECS fleet.
 * [SSH](http://www.openssh.com/) installed and working
 * The environment variable `AWS_ACCESS_KEY_ID` set to your AWS Access Key ID 
 * The environment variable `AWS_SECRET_ACCESS_KEY` set to your AWS Secret Access Key
-* An existing [AWS SSH Key Pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html)
+* The environment variable `AWS_REGION` set to AWS region you will be working in 
+* An existing [AWS IAM account](https://aws.amazon.com/iam/) that has full administration privledges
 
 #Building
 This project is a collection of data files consumed by Terraform so there is nothing to build. 
@@ -18,74 +19,38 @@ This project is a collection of data files consumed by Terraform so there is not
 You need to export your AWS key information to the environment so that Terraform can pick them up.  Typically, this is 
 done via a simple export command.
 
+* `export AWS_REGION=us-east-1`
 * `export AWS_ACCESS_KEY_ID=AAAAAAAAAAAAAAAAAAAA`
 * `export AWS_SECRET_ACCESS_KEY=AAAAAAAAAAAAAAAAAAAA`
 
-You also need to have access to the private half of the AWS SSH key pair.  The file needs to be set to the correct permissions or 
-SSH will refuse to run.  Typically this is done via the `chmod` command: `chmod 0400 private-half.pem`.  The key should be 
-available as part of this source set and is named `docker-registry-test.pem`.  Again, double check the permission bits before trying 
-to connect to an instance.
-
-If you want to use a different key pair, you'll need to edit the `variables.tf` and adjust the `key_name` variable to use your SSH Key 
-Pair name.  You also need to adjust the `key_path` variable to point to the private half of the SSH key pair.
-
-**Important:** at the end of the process, Terraform will display some information including the key information for the newly created 
-user that will have the proper S3 permissions to access the bucket and objects.
-
-```bash
-Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
-
-The state of your infrastructure has been saved to the path
-below. This state is required to modify and destroy your
-infrastructure, so keep it safe. To inspect the complete state
-use the `terraform show` command.
-
-State path: terraform.tfstate
-
-Outputs:
-
-  elb-dns    = load-balancer-291039105.us-west-2.elb.amazonaws.com
-  key        = AKIAJFFJ73Z5VPCU7GUA
-  key-status = Active
-  secret-key = tSduMZrxTJLrz4ahRj2DZwY8ZLfZk+T4gq/wGZ66
-  user       = registry
-```
-
-**If you forget to save these key values you will not be able provision your new instance.**  You have been warned.
-
 #Tips and Tricks
 
-##Creating The Virtual Hardware
-To create a new environment, run `./create.sh` and you should have a new VPC with EC2 instances running in multiple availability zones.
-Terraform keeps track of the current state of the AWS assets it manages so it is **very important to commit and push any changes to 
-Git** after any changes have been made.  Otherwise, Terraform will get confused when the next person clones this repository and tries 
-to apply any changes.
+##Creating The Cloud Environment 
+To create a new environment, run `./create.sh` and you should have a new Docker registry and 3 new IAM groups that allow for interactint
+with the Docker registry.  Terraform keeps track of the current state of the AWS assets it manages so it is **very important to commit and 
+push any changes to Git** after any changes have been made.  Otherwise, Terraform will get confused when the next person clones this 
+repository and tries to apply any changes.
 
 ##Verifying The Setup
-Open the AWS console and grab the public ip address of the new EC2 instance and then run `./ssh-into-instance.sh` giving it the ip address 
-as an argument.  If everything is correct, you should be ssh'ed into your newly created box.
+Open the AWS console and 
+
+* TODO
+* TODO
 
 ##Start Over
 If there is an error with configuration that prevents Terraform from completing its mission, run `./destroy.sh` to remove any assets that 
-have been created.  You don't want to get charged for assets that you are not going to use! Alternatively, you can use the AWS console to 
-destroy the assets but you are more likely to forget something and end up getting charged for an orphaned asset. **Please remember that the 
-storage assets will be destroyed and all your data will be lost.** You have been warned.
+have been created.
 
-##The Virtual Private Cloud (VPC)
-All the assets are placed within a VPC so as to isolate it from other installations.  Only one availability zone is used since 
-this configuration is not highly available. 
+##The IAM Groupls
+TODO
 
-##Scheduled Provisioning
-Currently, Terraform does not support scheduled provisioning of auto-scaling groups so you have to drop down to the AWS CLI.
-An example of how to set up a schecudule can be found in the `create-scaling-schedule.sh` script.  The script is very simple 
-and does not know about the infrastructure set up by Terraform so you will have to edit it before running. It will set up a 
-schedule where instances are spun in the morning and torn down at night.  This is a common cost savings scenario.
+##The Registry
+TODO
 
 #Troubleshooting
 
-#Use Your Own Keys
-The keys in this project won't work for you because they are associated with a different account.  Make sure to substitute your own 
-keys!
+#Amazon Region
+Amazon is still rolling out ECR and it currently only available in the Virginia region (us-east-1).
 
 ##Terraform Version
 Easily, the largest cause of problems is that an older version of Terraform is being used.  Terraform is constantly being updated to keep 
