@@ -7,7 +7,7 @@ variable "bob" {
 # ------------ resources -------------------
 
 resource "aws_iam_group" "docker-registry-administrator" {
-    name = "docker-registry-administrator"
+    name = "DockerRegistryAdministrator"
     path = "/"
 }
 
@@ -18,7 +18,7 @@ resource "aws_iam_policy_attachment" "docker-registry-administrator-policy-attac
 }
 
 resource "aws_iam_group" "docker-registry-writer" {
-    name = "docker-registry-writer"
+    name = "DockerRegistryWriter"
     path = "/"
 }
 
@@ -29,7 +29,7 @@ resource "aws_iam_policy_attachment" "docker-registry-writer-policy-attachment" 
 }
 
 resource "aws_iam_group" "docker-registry-reader" {
-    name = "docker-registry-reader"
+    name = "DockerRegistryReader"
     path = "/"
 }
 
