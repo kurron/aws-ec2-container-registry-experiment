@@ -1,0 +1,52 @@
+{
+    "description": "Builds a Docker enabled Ubuntu 14.04 Server x64 AMI",
+    "min_packer_version": "0.8.6",
+
+    "variables": {
+        "region": "us-west-2",
+        "vpc_id": "vpc-fe24779b",
+        "subnet_id": "subnet-7181c606",
+        "source_ami": "ami-5189a661",
+        "ssh_username": "ubuntu"
+    },
+
+    "builders": [{
+        "type": "amazon-ebs",
+        "ami_name": "trusty-x64-docker-{{timestamp}}",
+        "ami_description": "AMI with Docker pre-installed",
+        "associate_public_ip_address": true,
+        "instance_type": "t2.micro",
+        "region": "{{ user `region` }}",
+        "source_ami": "{{ user `source_ami` }}",
+        "ssh_port": 22,
+        "ssh_username": "{{ user `ssh_username` }}",
+        "ssh_timeout": "5m",
+        "enhanced_networking": "true",
+        "force_deregister": "true",
+        "subnet_id": "{{ user `subnet_id` }}",
+        "vpc_id": "{{ user `vpc_id` }}",
+        "tags": {
+            "Name": "Docker",
+            "OS": "Ubuntu",
+            "Version": "14.04",
+            "State": "In-Production",
+            "Container Support": "Docker",
+            "Monitoring Support": "Amazon Cloud Watch",
+            "Logging Support": "Loggly"
+        }
+    }],	
+    "provisioners": [
+        {
+            "type": "shell",
+            "scripts": ["ansible/scripts/install-ansible.sh"]
+        },
+        {
+            "playbook_dir"  : "ansible",
+            "playbook_file" : "ansible/playbook.yml",
+            "type"          : "ansible-local"
+        }
+    ],
+    "post-processors": [
+    ]
+}
+
