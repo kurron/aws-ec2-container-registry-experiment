@@ -39,12 +39,13 @@ resource "aws_iam_policy_attachment" "docker-registry-reader-policy-attachment" 
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_ecr_repository" "test" {
-  name = "test"
-}
+#resource "aws_ecr_repository" "test" {
+  #name = "test"
+#}
 
 # ------------ outputs ----------------------
 
 output "repository_arn" {
-    value = "${aws_ecr_repository.test.arn}"
+#   value = "${aws_ecr_repository.test.arn}"
+    value = "something fake"
 }
