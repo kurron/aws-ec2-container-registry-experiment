@@ -20,8 +20,8 @@ You need to export your AWS key information to the environment so that Terraform
 done via a simple export command.
 
 * `export AWS_REGION=us-east-1`
-* `export AWS_ACCESS_KEY_ID=AAAAAAAAAAAAAAAAAAAA`
-* `export AWS_SECRET_ACCESS_KEY=AAAAAAAAAAAAAAAAAAAA`
+* `export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE`
+* `export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`
 
 #Tips and Tricks
 
